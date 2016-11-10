@@ -4,7 +4,12 @@
     "repositoryName": "patrikwm.github.io",
     "branch": "master"
   },
+  "site": {
+    "title": "the stuff blog",
+    "description": "A blog about computer stuff"
+  },
+  "socialnetwork": {},
   "theme": {
-    "name": "Casper"
+    "name": "casper"
   }
 }
