@@ -78,4 +78,6 @@ Now users should be able to login to the Linux system with ssh.
 
 ## LDAP USER PUBKEY
 
-Now when users can login to Linux with SSH we want pubkeyauthentication.
+Now when users can login to Linux with SSH lets continue with pubkey authentication. I started with adding a attribute to LDAP that hosted the sshkey for each user following this guide. https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html
+
+TBC..
