@@ -19,4 +19,63 @@ I manage a whole bunch of Linux machines with different users with keys. I start
 
 It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. Something ad to be done!
 
-I wanted SSH PubkeyAuthentication but with centralized authentication. 
+I wanted centralized user management but with public key authentication. I wanted to connect Centos 7 servers to Active directory. I found this post that made it really easy. https://outsideit.net/realmd-sssd-ad-authentication/
+
+## LDAP AUTHENTICATION
+
+- domain: internalab.com
+- user: patrikwm
+
+Basically it went with the instructions from that page with small modifications. I install openldap-clients to get ldapsearch for later pubkeyauthentication.
+```bash
+yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common samba-common-tools ntpdate ntp openldap-clients
+```
+
+The linux NTP is really crutial for logging in to Active directory. Edit /etc/ntp.conf so it points to domainctroller. (Remember to open port udp/123 in the firewall on domaincontroller.
+```bash
+server dc01.internalab.com
+server dc02.internalab.com
+```
+
+Enable ntpd and update the NTP time on linux machine.
+```bash
+systemctl enable ntpd
+ntpdate -u dc01.internalab.com
+sysemctl start ntpd
+```
+
+Join the domain with Linux-server
+```bash
+realm join --user=patrikwm@internalab.com internalab.com
+```
+
+I was first trying to set the SSH user access group in sshd_config but i noticed that user groups are only updated after the user has logged in. This means that users that are not alredy in the system can not login if sshd_config AllowGroups sshusers@internalab.com would not work if the user is not alredy on the system with that group.
+
+Edit the /etc/sssd/sssd.conf file with following. And notice in the bottom there is a ad_access_filter group that specifies the allowed user group.
+```bash
+[sssd]
+domains = internalab.com
+config_file_version = 2
+services = nss, pam
+default_domain_suffix = INTERNALAB.COM
+
+[domain/internalab.com]
+ad_domain = internalab.com
+krb5_realm = INTERNALAB.COM
+realmd_tags = manages-system joined-with-samba
+cache_credentials = True
+id_provider = ad
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+ldap_id_mapping = True
+use_fully_qualified_names = True
+fallback_homedir = /home/%u@%d
+access_provider = ad
+ad_access_filter = memberOf=CN=linux_users,OU=company,DC=internalab,DC=com
+```
+
+Now users should be able to login to the Linux system with ssh.
+
+## LDAP USER PUBKEY
+
+Now when users can login to Linux with SSH we want pubkeyauthentication.
