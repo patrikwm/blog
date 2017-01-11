@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://patrikwm.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484162609582" />
+    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484166897663" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://patrikwm.github.io/2016/11/11/Centos-7-ssh-ad-login-with-keys.html" />
@@ -21,11 +21,21 @@
     <meta property="og:site_name" content="the stuff blog" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Centos 7 ssh ad login with keys" />
-    <meta property="og:description" content="This should probably contain some info about what the blog will contain but im skipping that. test" />
+    <meta property="og:description" content="I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this. - name: Create user patrikwm   user:     name: patrikwm" />
     <meta property="og:url" content="https://patrikwm.github.io/2016/11/11/Centos-7-ssh-ad-login-with-keys.html" />
+    <meta property="article:tag" content="centos" />
+    <meta property="article:tag" content=" ssh" />
+    <meta property="article:tag" content=" ldap" />
+    <meta property="article:tag" content=" active directory" />
+    <meta property="article:tag" content=" ssh" />
+    <meta property="article:tag" content=" publickey" />
+    <meta property="article:tag" content=" schema" />
+    <meta property="article:tag" content=" class" />
+    <meta property="article:tag" content=" ansible" />
+    
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Centos 7 ssh ad login with keys" />
-    <meta name="twitter:description" content="This should probably contain some info about what the blog will contain but im skipping that. test" />
+    <meta name="twitter:description" content="I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this. - name: Create user patrikwm   user:     name: patrikwm" />
     <meta name="twitter:url" content="https://patrikwm.github.io/2016/11/11/Centos-7-ssh-ad-login-with-keys.html" />
     
     <script type="application/ld+json">
@@ -35,7 +45,7 @@ null
     <meta name="generator" content="HubPress" />
     <link rel="alternate" type="application/rss+xml" title="the stuff blog" href="https://patrikwm.github.io/rss/" />
 </head>
-<body class="post-template nav-closed">
+<body class="post-template tag-centos tag-ssh tag-ldap tag-active-directory tag-ssh tag-publickey tag-schema tag-class tag-ansible nav-closed">
 
     
 
@@ -51,21 +61,133 @@ null
 </header>
 
 <main class="content" role="main">
-    <article class="post">
+    <article class="post tag-centos tag-ssh tag-ldap tag-active-directory tag-ssh tag-publickey tag-schema tag-class tag-ansible">
 
         <header class="post-header">
             <h1 class="post-title">Centos 7 ssh ad login with keys</h1>
             <section class="post-meta">
-                <time class="post-date" datetime="2016-11-11">11 November 2016</time> 
+                <time class="post-date" datetime="2016-11-11">11 November 2016</time>  on <a href="https://patrikwm.github.io/tag/centos/">centos</a>, <a href="https://patrikwm.github.io/tag/ssh/"> ssh</a>, <a href="https://patrikwm.github.io/tag/ldap/"> ldap</a>, <a href="https://patrikwm.github.io/tag/active-directory/"> active directory</a>, <a href="https://patrikwm.github.io/tag/ssh/"> ssh</a>, <a href="https://patrikwm.github.io/tag/publickey/"> publickey</a>, <a href="https://patrikwm.github.io/tag/schema/"> schema</a>, <a href="https://patrikwm.github.io/tag/class/"> class</a>, <a href="https://patrikwm.github.io/tag/ansible/"> ansible</a>
             </section>
         </header>
 
         <section class="post-content">
-            <div class="paragraph">
-<p>This should probably contain some info about what the blog will contain but im skipping that.</p>
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ansible" data-lang="ansible">- name: Create user patrikwm
+  user:
+    name: patrikwm
+    groups: wheel,sshusers
+    password: "$6$rounds=656....Jce6tPRvP6Rl2a2oZ621"
+    shell: /bin/bash
+
+- name: Copy ssh public key for patrikwm
+  authorized_key:
+  user: patrikwm
+  key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>test</p>
+<p>It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. Something ad to be done!</p>
+</div>
+<div class="paragraph">
+<p>I wanted centralized user management but with public key authentication. I wanted to connect Centos 7 servers to Active directory. I found this post that made it really easy. <a href="https://outsideit.net/realmd-sssd-ad-authentication/" class="bare">https://outsideit.net/realmd-sssd-ad-authentication/</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ldap_authentication">LDAP AUTHENTICATION</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>domain: internalab.com</p>
+</li>
+<li>
+<p>user: patrikwm</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Basically it went with the instructions from that page with small modifications. I install openldap-clients to get ldapsearch for later pubkeyauthentication.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common samba-common-tools ntpdate ntp openldap-clients</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The linux NTP is really crutial for logging in to Active directory. Edit /etc/ntp.conf so it points to domainctroller. (Remember to open port udp/123 in the firewall on domaincontroller.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">server dc01.internalab.com
+server dc02.internalab.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Enable ntpd and update the NTP time on linux machine.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl enable ntpd
+ntpdate -u dc01.internalab.com
+sysemctl start ntpd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Join the domain with Linux-server</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">realm join --user=patrikwm@internalab.com internalab.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I was first trying to set the SSH user access group in sshd_config but i noticed that user groups are only updated after the user has logged in. This means that users that are not alredy in the system can not login if sshd_config AllowGroups <a href="mailto:sshusers@internalab.com">sshusers@internalab.com</a> would not work if the user is not alredy on the system with that group.</p>
+</div>
+<div class="paragraph">
+<p>Edit the /etc/sssd/sssd.conf file with following. And notice in the bottom there is a ad_access_filter group that specifies the allowed user group.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[sssd]
+domains = internalab.com
+config_file_version = 2
+services = nss, pam
+default_domain_suffix = INTERNALAB.COM
+
+[domain/internalab.com]
+ad_domain = internalab.com
+krb5_realm = INTERNALAB.COM
+realmd_tags = manages-system joined-with-samba
+cache_credentials = True
+id_provider = ad
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+ldap_id_mapping = True
+use_fully_qualified_names = True
+fallback_homedir = /home/%u@%d
+access_provider = ad
+ad_access_filter = memberOf=CN=linux_users,OU=company,DC=internalab,DC=com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now users should be able to login to the Linux system with ssh.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ldap_user_pubkey">LDAP USER PUBKEY</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now when users can login to Linux with SSH we want pubkeyauthentication.</p>
+</div>
+</div>
 </div>
         </section>
 
@@ -136,8 +258,8 @@ null
         hljs.initHighlightingOnLoad();
       </script>
 
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484162609582"></script>
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484162609582"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484166897663"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484166897663"></script>
 
 </body>
 </html>
