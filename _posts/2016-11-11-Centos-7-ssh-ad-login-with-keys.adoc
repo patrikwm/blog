@@ -1,2 +1,3 @@
-= My first post
+= Centos 7 ssh ad login with keys
+
 This should probably contain some info about what the blog will contain but im skipping that.
