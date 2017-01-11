@@ -1,5 +1,22 @@
 = Centos 7 ssh ad login with keys
+:hp-tags: centos, ssh, ldap, active directory, ssh, publickey, schema, class, ansible
 
-This should probably contain some info about what the blog will contain but im skipping that.
+I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this.
 
-test
+```ansible
+- name: Create user patrikwm
+  user:
+    name: patrikwm 
+    groups: wheel,sshusers 
+    password: "$6$rounds=656....Jce6tPRvP6Rl2a2oZ621" 
+    shell: /bin/bash
+
+- name: Copy ssh public key for patrikwm
+  authorized_key: 
+  user: patrikwm 
+  key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"
+```
+
+It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. Something ad to be done!
+
+I wanted SSH PubkeyAuthentication but with centralized authentication. 
