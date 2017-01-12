@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://patrikwm.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484199665951" />
+    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484209061841" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://patrikwm.github.io/2016/11/11/001-Centos-SSH-Active-Directory.html" />
@@ -185,10 +185,13 @@ ad_access_filter = memberOf=CN=linux_users,OU=company,DC=internalab,DC=com</code
 <h2 id="_ldap_user_pubkey">LDAP USER PUBKEY</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Now when users can login to Linux with SSH lets continue with pubkey authentication. I started with adding a attribute to LDAP that hosted the sshkey for each user following this guide. <a href="https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html" class="bare">https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html</a></p>
+<p>Now when users can login to Linux with SSH lets continue with pubkey authentication. I started with adding a attribute to LDAP that hosted the sshkey for each user following this guide.</p>
 </div>
 <div class="paragraph">
-<p>TBC..</p>
+<p>SSH usermapping and keymapping in AD: <a href="https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html" class="bare">https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html</a></p>
+</div>
+<div class="paragraph">
+<p>PowerShell and the Active Directory Schema: <a href="https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/" class="bare">https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/</a></p>
 </div>
 </div>
 </div>
@@ -261,8 +264,8 @@ ad_access_filter = memberOf=CN=linux_users,OU=company,DC=internalab,DC=com</code
         hljs.initHighlightingOnLoad();
       </script>
 
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484199665951"></script>
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484199665951"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484209061841"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484209061841"></script>
 
 </body>
 </html>
