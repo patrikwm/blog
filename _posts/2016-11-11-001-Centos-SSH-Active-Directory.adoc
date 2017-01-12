@@ -13,8 +13,8 @@ I manage a whole bunch of Linux machines with different users with keys. I start
 
 - name: Copy ssh public key for patrikwm
   authorized_key: 
-  user: patrikwm 
-  key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"
+    user: patrikwm 
+    key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"
 ```
 
 It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. Something ad to be done!
