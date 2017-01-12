@@ -1,7 +1,10 @@
 = 001 - Centos SSH Active Directory
 :hp-tags: centos, ssh, ldap, active directory, ssh, publickey, schema, class, ansible
 
-I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this.
+Its a big pain to manage a lot of users in linux without centralized user management. One way is to use ansible but i have found LDAP and Active directory is great for this.
+I have done some testing in my lab environment and had to write this down for later reference.
+
+Usually with few servers and users this simple ansible script can be used.
 
 ```ansible
 - name: Create user patrikwm
@@ -17,13 +20,14 @@ I manage a whole bunch of Linux machines with different users with keys. I start
     key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"
 ```
 
-It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. Something ad to be done!
+It nice at start. But then with more and more servers it becomes cumbersome to remove users and to know what users are added on the linux machines. 
 
-I wanted centralized user management but with public key authentication. I wanted to connect Centos 7 servers to Active directory. I found this post that made it really easy. https://outsideit.net/realmd-sssd-ad-authentication/
+It is really easy to connect a centos 7 machine to Active directory with this guide. https://outsideit.net/realmd-sssd-ad-authentication/
+It goes a little something like this. 
 
 ## LDAP AUTHENTICATION
 
-- domain: internalab.com
+- domain: lab.local
 - user: patrikwm
 
 Basically it went with the instructions from that page with small modifications. I install openldap-clients to get ldapsearch for later pubkeyauthentication.
@@ -33,35 +37,35 @@ yum -y install realmd sssd oddjob oddjob-mkhomedir adcli samba-common samba-comm
 
 The linux NTP is really crutial for logging in to Active directory. Edit /etc/ntp.conf so it points to domainctroller. (Remember to open port udp/123 in the firewall on domaincontroller.
 ```bash
-server dc01.internalab.com
-server dc02.internalab.com
+server dc01.lab.local
+server dc02.lab.local
 ```
 
 Enable ntpd and update the NTP time on linux machine.
 ```bash
 systemctl enable ntpd
-ntpdate -u dc01.internalab.com
+ntpdate -u dc01.lab.local
 sysemctl start ntpd
 ```
 
 Join the domain with Linux-server
 ```bash
-realm join --user=patrikwm@internalab.com internalab.com
+realm join --user=patrikwm@lab.local lab.local
 ```
 
-I was first trying to set the SSH user access group in sshd_config but i noticed that user groups are only updated after the user has logged in. This means that users that are not alredy in the system can not login if sshd_config AllowGroups sshusers@internalab.com would not work if the user is not alredy on the system with that group.
+I was first trying to set the SSH user access group in sshd_config but i noticed that user groups are only updated after the user has logged in. This means that users that are not alredy in the system can not login if sshd_config AllowGroups sshusers@lab.local would not work if the user is not alredy on the system with that group.
 
-Edit the /etc/sssd/sssd.conf file with following. And notice in the bottom there is a ad_access_filter group that specifies the allowed user group.
+Edit the /etc/sssd/sssd.conf file with following. And notice in the bottom there is a ad_access_filter group that specifies the allowed user group. https://github.com/patrikwm/Centos-SSH-Active-Directory/blob/master/sssd.conf
 ```bash
 [sssd]
-domains = internalab.com
+domains = lab.local
 config_file_version = 2
 services = nss, pam
-default_domain_suffix = INTERNALAB.COM
+default_domain_suffix = LAB.LOCAL
 
-[domain/internalab.com]
-ad_domain = internalab.com
-krb5_realm = INTERNALAB.COM
+[domain/lab.local]
+ad_domain = lab.local
+krb5_realm = LAB.LOCAL
 realmd_tags = manages-system joined-with-samba
 cache_credentials = True
 id_provider = ad
@@ -71,7 +75,7 @@ ldap_id_mapping = True
 use_fully_qualified_names = True
 fallback_homedir = /home/%u@%d
 access_provider = ad
-ad_access_filter = memberOf=CN=linux_users,OU=company,DC=internalab,DC=com
+ad_access_filter = memberOf=CN=linux_users,OU=company,DC=lab,DC=local
 ```
 
 Now users should be able to login to the Linux system with ssh.
@@ -80,21 +84,68 @@ Now users should be able to login to the Linux system with ssh.
 
 Now when users can login to Linux with SSH lets continue with pubkey authentication. I started with adding a attribute to LDAP that hosted the sshkey for each user following this guide. 
 
-SSH usermapping and keymapping in AD: https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html
+1 SSH usermapping and keymapping in AD: https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html
 
-PowerShell and the Active Directory Schema: Part 1: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/16/powershell-and-the-active-directory-schema-part-1/
+2 PowerShell and the Active Directory Schema: Part 1: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/16/powershell-and-the-active-directory-schema-part-1/
 
-PowerShell and the Active Directory Schema: Part 2: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/
+3 PowerShell and the Active Directory Schema: Part 2: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/
 
 If you only want to use the functions in the script they can be loaded to the shell. The .<space> loads the function to the shell.
 ```code
 . .\functions.ps1
 ```
 
-I created a script that adds the sshPublicKey attribute to the active directory schema. You can download it here. https://github.com/patrikwm/scripts/blob/master/add-sshPublicKey-attribute.ps1
+I created a script that adds the sshPublicKey attribute to the active directory schema. You can download it here. https://github.com/patrikwm/Centos-SSH-Active-Directory/blob/master/add-sshPublicKey-attribute.ps1
 
-When the key attribute is created we need to create a Class named ldapPublicKey. I have not figured out how to create a class in Powershell so i made this manually as in link #1.
+Following command adds a key to a user after running add-sshPublicKey-attribute.ps1 script.
+```code
+./add-sshPublicKey-attribute.ps1
+Get-ADUser patrikwm | Set-ADUser -Add @{sshPublicKey = 'ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation'}
+```
 
+When the key attribute is created we need to create a Class named ldapPublicKey and add it as a Auxiliary class to the User class in Activedirectory Schema. I have not figured out how to create a class in Powershell so i made this manually as in link 1 step (K).
+(https://technet.microsoft.com/en-us/library/2008.05.schema.aspx this could be some sollution for making it scriptable.)
+
+## SSH Key from LDAP to Centos
+
+To get the ssh key to linux i use ldapsearch which is installed with the openldap-clients package. A link to the script is here. https://github.com/patrikwm/Centos-SSH-Active-Directory/blob/master/fetchSSHKeysFromLDAP
+
+It is probably not best practice to write down a user and password in a file so machine authentication or so would be prefered but in a lab its ok i think.
+
+```code
+wget https://raw.githubusercontent.com/patrikwm/Centos-SSH-Active-Directory/master/fetchSSHKeysFromLDAP -P /usr/local/bin/
+chmod 0500 /usr/local/bin/fetchSSHKeysFromLDAP
+```
+
+Now the centos 7 host needs to use this script when ever the users are connecting this is done with following lines in /etc/ssh/sshd_config. AuthorizedKeysCommand executes the command and sends username after it. Since i use sAMAccountName which does not contain the @domain i removed everything after @ with a regexp in fetchSSHKeysFromLDAP. So AuthorizedKeysCommand would run this command in my lab. /usr/local/bin/fetchSSHKeysFromLDAP patrikwm@lab.local
+```code
+PubkeyAuthentication yes
+AuthorizedKeysCommandUser root
+AuthorizedKeysCommand /usr/local/bin/fetchSSHKeysFromLDAP
+```
+
+If above does not work. try turning off selinux
+```code
+setenforce 0
+```
+
+## Fixing SELINUX
+
+First i always mess up the locale. So i need to fix it.
+```code
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+```
+
+Install following TE files. 
+```code
+wget https://github.com/patrikwm/Centos-SSH-Active-Directory/raw/master/my-ldapsearch.pp
+wget https://github.com/patrikwm/Centos-SSH-Active-Directory/raw/master/my-sssd.pp
+semodule -i my-sssd.pp
+semodule -i my-ldapsearch.pp
+```
+
+Now it should work to login with setenforce 1 on the server
 
 
 
