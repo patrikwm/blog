@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[the stuff blog]]></title><description><![CDATA[A blog about computer stuff]]></description><link>https://patrikwm.github.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 12 Jan 2017 08:17:41 GMT</lastBuildDate><atom:link href="https://patrikwm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[001 - Centos SSH Active Directory]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[the stuff blog]]></title><description><![CDATA[A blog about computer stuff]]></description><link>https://patrikwm.github.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 12 Jan 2017 08:20:39 GMT</lastBuildDate><atom:link href="https://patrikwm.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[001 - Centos SSH Active Directory]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this.</p>
@@ -14,8 +14,8 @@
 
 - name: Copy ssh public key for patrikwm
   authorized_key:
-  user: patrikwm
-  key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"</code></pre>
+    user: patrikwm
+    key: "ssh-rsa AAAAB3Nxo8...EROBCQlXr8Mw== patrikwm-workstation"</code></pre>
 </div>
 </div>
 <div class="paragraph">
