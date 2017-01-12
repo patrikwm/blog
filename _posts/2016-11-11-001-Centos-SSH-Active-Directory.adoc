@@ -82,5 +82,19 @@ Now when users can login to Linux with SSH lets continue with pubkey authenticat
 
 SSH usermapping and keymapping in AD: https://www.balabit.com/documents/scb-latest-guides/en/scb-guide-admin/html/proc-scenario-usermapping.html
 
-PowerShell and the Active Directory Schema: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/
+PowerShell and the Active Directory Schema: Part 1: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/16/powershell-and-the-active-directory-schema-part-1/
+
+PowerShell and the Active Directory Schema: Part 2: https://blogs.technet.microsoft.com/heyscriptingguy/2015/06/17/powershell-and-the-active-directory-schema-part-2/
+
+If you only want to use the functions in the script they can be loaded to the shell. The .<space> loads the function to the shell.
+```code
+. .\functions.ps1
+```
+
+I created a script that adds the sshPublicKey attribute to the active directory schema. You can download it here. https://github.com/patrikwm/scripts/blob/master/add-sshPublicKey-attribute.ps1
+
+When the key attribute is created we need to create a Class named ldapPublicKey. I have not figured out how to create a class in Powershell so i made this manually as in link #1.
+
+
+
 
