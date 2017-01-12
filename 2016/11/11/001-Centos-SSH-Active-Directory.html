@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://patrikwm.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484226103197" />
+    <link rel="stylesheet" type="text/css" href="//patrikwm.github.io/themes/casper/assets/css/screen.css?v=1484226548175" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://patrikwm.github.io/2016/11/11/001-Centos-SSH-Active-Directory.html" />
@@ -286,7 +286,21 @@ semodule -i my-ldapsearch.pp</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now it should work to login with setenforce 1 on the server</p>
+<p>Now it should work to login with ssh key LDAP user and setenforce 1 on the server.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>check logfiles!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-code" data-lang="code">tail -f /var/log/audit/audit.log
+tail -f /var/log/sssd/*</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -359,8 +373,8 @@ semodule -i my-ldapsearch.pp</code></pre>
         hljs.initHighlightingOnLoad();
       </script>
 
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484226103197"></script>
-    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484226103197"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1484226548175"></script>
+    <script type="text/javascript" src="//patrikwm.github.io/themes/casper/assets/js/index.js?v=1484226548175"></script>
 
 </body>
 </html>
