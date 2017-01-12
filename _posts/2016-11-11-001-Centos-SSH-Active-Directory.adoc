@@ -1,4 +1,4 @@
-= Centos 7 ssh ad login with keys
+= 001 - Centos SSH Active Directory
 :hp-tags: centos, ssh, ldap, active directory, ssh, publickey, schema, class, ansible
 
 I manage a whole bunch of Linux machines with different users with keys. I started doing this manually because i did not know much about Linux and automation. Last years i have done this through Ansible. With a task something like this.
