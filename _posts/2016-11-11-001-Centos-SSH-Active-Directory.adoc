@@ -145,7 +145,15 @@ semodule -i my-sssd.pp
 semodule -i my-ldapsearch.pp
 ```
 
-Now it should work to login with setenforce 1 on the server
+Now it should work to login with ssh key LDAP user and setenforce 1 on the server.
 
+## Troubleshooting.
+
+check logfiles!
+
+```code
+tail -f /var/log/audit/audit.log
+tail -f /var/log/sssd/*
+```
 
 
