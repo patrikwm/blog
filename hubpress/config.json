@@ -9,7 +9,9 @@
     "description": "A blog about computer stuff",
     "googleAnalytics": "UA-45628459-2"
   },
-  "socialnetwork": {},
+  "socialnetwork": {
+    "github": "https://www.github.com/patrikwm"
+  },
   "theme": {
     "name": "casper"
   }
