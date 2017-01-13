@@ -6,7 +6,8 @@
   },
   "site": {
     "title": "the stuff blog",
-    "description": "A blog about computer stuff"
+    "description": "A blog about computer stuff",
+    "googleAnalytics": "UA-45628459-2"
   },
   "socialnetwork": {},
   "theme": {
